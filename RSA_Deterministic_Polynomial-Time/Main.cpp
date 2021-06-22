@@ -190,16 +190,11 @@ ostream& operator << (ostream& out, const Ext& obj) {
     return out;
 }
 
-//int main() {
-//    BigInt N(143), e(11);
-//    cout << N % e;
-//}
-
 int main() {
     clock_t start, end;
     double cpu_time_used;
 
-    int bit_size, samples = 1000;
+    int bit_size, samples = 1;
     for (bit_size = 8; bit_size < 1024; bit_size *= 2) {
         start = clock();
         for (int i = 0; i < samples; ++i)
@@ -219,3 +214,13 @@ int main() {
     }
     return 0;
 }
+//
+//#include "mini-gmp/mini-gmp.h"
+//#include "mini-gmp/mini-mpq.h"
+//
+//int main() {
+//    mpz_t sum;
+//
+//    return 0;
+//}
+//

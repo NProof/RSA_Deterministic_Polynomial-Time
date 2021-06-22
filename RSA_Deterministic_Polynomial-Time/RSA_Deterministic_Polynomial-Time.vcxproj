@@ -142,7 +142,9 @@
     <ClInclude Include="BigInt.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Main.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">-lgmpxx -lgmp %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
