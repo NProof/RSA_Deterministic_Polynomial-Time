@@ -21,7 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BigInt.h">
-      <Filter>來源檔案</Filter>
+      <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
