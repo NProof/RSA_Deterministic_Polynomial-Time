@@ -25,7 +25,7 @@ public:
     ~RSA();
 
     void gen_ed(gmp_randstate_t);
-    //bool test(const BigInt&, const BigInt&);
+    bool test(const mpz_t, const mpz_t);
 
     void find_two_prime(int, gmp_randstate_t);
     bool find_Factorization(mpz_t, mpz_t);
@@ -95,10 +95,10 @@ void RSA::gen_ed(gmp_randstate_t rstate) {
     mpz_clear(qminus);
     mpz_clear(pminus);
 }
-//
-//bool RSA::test(const BigInt& rp, const BigInt& rq) {
-//    return p == rp && q == rq;
-//}
+
+bool RSA::test(const mpz_t rp, const mpz_t rq) {
+    return mpz_cmp(p, rp) == 0 && mpz_cmp(q, rq) == 0;
+}
 
 void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
     mpz_t tmp;
@@ -157,8 +157,8 @@ int main() {
     clock_t start, end;
     double cpu_time_used;
 
-    int bit_size, samples = 3;
-    for (bit_size = 8; bit_size < 64; bit_size += 8) {
+    int bit_size, samples = 100;
+    for (bit_size = 8; bit_size < 256; bit_size += 8) {
         start = clock();
         for (int i = 0; i < samples; ++i)
         {
@@ -170,11 +170,11 @@ int main() {
             mpz_init(rp);
             mpz_init(rq);
             _ASSERT(rsa.find_Factorization(rp, rq));
-            cout << "p:";
-            mpz_out_str(stdout, 10, rsa.p); putc('\n', stdout);
-            cout << "q:";
-            mpz_out_str(stdout, 10, rsa.q); putc('\n', stdout);
-        //    _ASSERT(rsa.test(rp, rq));
+            //cout << "p:";
+            //mpz_out_str(stdout, 10, rsa.p); putc('\n', stdout);
+            //cout << "q:";
+            //mpz_out_str(stdout, 10, rsa.q); putc('\n', stdout);
+            _ASSERT(rsa.test(rp, rq));
             mpz_clear(rp);
             mpz_clear(rq);
         }
