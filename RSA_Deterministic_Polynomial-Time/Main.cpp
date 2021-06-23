@@ -23,6 +23,7 @@ public:
     ~RSA();
 
     void gen_ed(gmp_randstate_t);
+    void gen_ed2(gmp_randstate_t);
     bool test(const mpz_t, const mpz_t);
 
     void find_two_prime(int, gmp_randstate_t);
@@ -42,7 +43,7 @@ RSA::RSA(int bit_size, gmp_randstate_t rstate) {
     mpz_mul(N, p, q);
     //cout << "N: "; mpz_out_str(stdout, 10, N);
     //cout << "\n[ N ]bit_size: " << mpz_sizeinbase(N, 2) << endl;
-    gen_ed(rstate);
+    gen_ed2(rstate);
     //cout << "\ne: "; mpz_out_str(stdout, 10, e);
     //cout << "\nd: "; mpz_out_str(stdout, 10, d);
 }
@@ -95,6 +96,37 @@ void RSA::gen_ed(gmp_randstate_t rstate) {
     mpz_clear(pminus);
 }
 
+void RSA::gen_ed2(gmp_randstate_t rstate) {
+    mpz_t pminus, qminus, phi, gcd;
+    mpz_init(pminus); mpz_init(qminus);
+    mpz_init(phi); mpz_init(gcd);
+    mpz_sub_ui(pminus, p, 1);
+    mpz_sub_ui(qminus, q, 1);
+    mpz_mul(phi, pminus, qminus);
+    mpz_t ed, n3f2;
+    mpz_init(ed); mpz_init(n3f2);
+    mpz_pow_ui(n3f2, N, 3);
+    mpz_sqrt(n3f2, n3f2);
+    do {
+        while (true) {
+            mpz_urandomm(e, rstate, phi);
+            mpz_gcd(gcd, e, phi);
+            if (mpz_cmp_ui(gcd, 1) == 0)
+                break;
+        }
+        mpz_invert(d, e, phi);
+        mpz_mul(ed, e, d);
+    } while (mpz_cmp(ed, n3f2) > 0);
+    mpz_mod(ed, ed, phi);
+    _ASSERT(mpz_cmp_ui(ed, 1) == 0);
+    mpz_clear(n3f2);
+    mpz_clear(ed);
+    mpz_clear(gcd);
+    mpz_clear(phi);
+    mpz_clear(qminus);
+    mpz_clear(pminus);
+}
+
 bool RSA::test(const mpz_t rp, const mpz_t rq) {
     //cout << "p:";
     //mpz_out_str(stdout, 10, p); putchar('\n');
@@ -139,7 +171,7 @@ bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
     mpz_sqrt(n3f2, n3f2);
     if (mpz_cmp(ed, n3f2) <= 0) {
         mpz_clear(n3f2);
-        cout << "factorizationCase1" << endl;
+        cout << "[C] 1." << endl;
         return factorizationCase1(ed, rp, rq);
         mpz_clear(ed);
     }
@@ -170,7 +202,6 @@ bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
     //mpz_clear(ed);
     return false;
 }
-
 
 bool RSA::factorizationCase1(mpz_t ed, mpz_t rp, mpz_t rq) {
     mpz_t k, kp, edtmp;
@@ -228,7 +259,7 @@ int main() {
     clock_t start, end;
     double cpu_time_used;
 
-    int bit_size = 21, samples = 100;
+    int bit_size = 32, samples = 100;
     for (int i = 0; i < samples; ++i)
     {
         start = clock();
