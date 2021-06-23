@@ -125,7 +125,6 @@ void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
     _ASSERT(mpz_cmp(p, q) < 0);
 }
 
-
 bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
     mpz_t i, end, r;
     mpz_init(i);
@@ -139,11 +138,17 @@ bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
             if (mpz_cmp_ui(r, 0) == 0) {
                 mpz_set(rp, i);
                 mpz_divexact(rq, N, i);
+                mpz_clear(i);
+                mpz_clear(end);
+                mpz_clear(r);
                 return true;
             }
         }
         mpz_add_ui(i, i, 1);
     }
+    mpz_clear(i);
+    mpz_clear(end);
+    mpz_clear(r);
     return false;
 }
 
