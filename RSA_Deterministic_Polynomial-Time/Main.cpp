@@ -153,13 +153,6 @@ void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
 //    }
 //    return false;
 //}
-//
-//ostream& operator << (ostream& out, const Ext& obj) {
-//    if (obj.neg)
-//        printf("-");
-//    Print(obj.n);
-//    return out;
-//}
 
 //int main() {
 //
