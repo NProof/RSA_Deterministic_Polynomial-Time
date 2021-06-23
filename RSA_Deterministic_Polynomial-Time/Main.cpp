@@ -56,16 +56,6 @@ RSA::~RSA() {
     mpz_clear(d);
 }
 
-int main() {
-    gmp_randstate_t rstate;
-    gmp_randinit_default(rstate);
-    gmp_randseed_ui(rstate, time(0));
-
-    RSA rsa(32, rstate);
-
-    return 0;
-}
-
 //RSA::RSA(mpz_t p, mpz_t q) {
 //    _ASSERT(p != q);
 //    this->N = p * q;
@@ -152,6 +142,16 @@ bool RSA::find_Factorization(BigInt& rp, BigInt& rq) {
     }
     return false;
 }*/
+
+int main() {
+    gmp_randstate_t rstate;
+    gmp_randinit_default(rstate);
+    gmp_randseed_ui(rstate, time(0));
+
+    RSA rsa(32, rstate);
+
+    return 0;
+}
 
 //int main() {
 //
