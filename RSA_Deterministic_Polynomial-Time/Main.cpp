@@ -131,20 +131,19 @@ void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
 }
 
 bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
-    cout << "[ find_Factorization ]" << endl;
-    //mpz_t ed, n3f2;
-    //mpz_init(ed);
-    //mpz_init(n3f2);
-    //mpz_mul(ed, e, d);
-    //mpz_pow_ui(n3f2, N, 3);
-    //mpz_sqrt(n3f2, n3f2);
-    //if (mpz_cmp(ed, n3f2) <= 0) {
-    //    mpz_clear(n3f2);
-    //    cout << "factorizationCase1" << endl;
-    //    return factorizationCase1(ed, rp, rq);
-    //    mpz_clear(ed);
-    //}
-    //cout << "other" << endl;
+    mpz_t ed, n3f2;
+    mpz_init(ed);
+    mpz_init(n3f2);
+    mpz_mul(ed, e, d);
+    mpz_pow_ui(n3f2, N, 3);
+    mpz_sqrt(n3f2, n3f2);
+    if (mpz_cmp(ed, n3f2) <= 0) {
+        mpz_clear(n3f2);
+        cout << "factorizationCase1" << endl;
+        return factorizationCase1(ed, rp, rq);
+        mpz_clear(ed);
+    }
+    cout << "other" << endl;
     mpz_t i, end, r;
     mpz_init(i);
     mpz_init(end);
@@ -219,6 +218,7 @@ bool RSA::factorizationCase1(mpz_t ed, mpz_t rp, mpz_t rq) {
     mpz_clear(paq); mpz_clear(start); mpz_clear(end);
     mpz_clear(kp);
     mpz_clear(k);
+    return founded;
 }
 
 int main() {
