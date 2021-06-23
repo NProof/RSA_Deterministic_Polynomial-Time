@@ -40,7 +40,7 @@ public:
     RSA(mpz_t, mpz_t);
     ~RSA();
 
-    //void gen_ed();
+    void gen_ed(gmp_randstate_t);
     //bool test(const BigInt&, const BigInt&);
 
     void find_two_prime(int, gmp_randstate_t);
@@ -59,7 +59,9 @@ RSA::RSA(int bit_size, gmp_randstate_t rstate) {
     mpz_mul(N, p, q);
     //cout << "N: "; mpz_out_str(stdout, 10, N);
     //cout << "\n[ N ]bit_size: " << mpz_sizeinbase(N, 2) << endl;
-    //gen_ed();
+    gen_ed(rstate);
+    cout << "e: "; mpz_out_str(stdout, 10, e);
+    cout << "\nd: "; mpz_out_str(stdout, 10, d);
 }
 
 RSA::~RSA() {
@@ -93,20 +95,32 @@ int main() {
 //    }
 //    this->bit_size = log(2, this->p - 1);
 //}
-//
-//void RSA::gen_ed() {
-//    BigInt pminus = p - 1, qminus = q - 1;
-//    BigInt M = pminus * qminus / gcd(pminus, qminus);
-//    //cout << p << q;
-//    while (true) {
-//        e = randWithRange(-1, M - 2) + 2;
-//        if (gcd(e, pminus) == 1 && gcd(e, qminus) == 1)
-//            break;
-//    }
-//    d = find_inverse(Ext(e), Ext(M));
-//    //cout << e << "d: " << d << "M: " << M << e * d % M;
-//    _ASSERT(e * d  % M == Integer(1));
-//}
+
+void RSA::gen_ed(gmp_randstate_t rstate) {
+    mpz_t pminus , qminus, phi, gcd;
+    mpz_init(pminus); mpz_init(qminus);
+    mpz_init(phi); mpz_init(gcd);
+    mpz_sub_ui(pminus, p, 1);
+    mpz_sub_ui(qminus, q, 1);
+    mpz_mul(phi, pminus, qminus);
+    while (true) {
+        mpz_urandomm(e, rstate, phi);
+        mpz_gcd(gcd, e, phi);
+        if (mpz_cmp_ui(gcd, 1) == 0)
+            break;
+    }
+    mpz_invert(d, e, phi);
+    mpz_t tmp;
+    mpz_init(tmp);
+    mpz_mul(tmp, e, d);
+    mpz_mod(tmp, tmp, phi);
+    _ASSERT(mpz_cmp_ui(tmp, 1) == 0);
+    mpz_clear(tmp);
+    mpz_clear(gcd);
+    mpz_clear(phi);
+    mpz_clear(qminus);
+    mpz_clear(pminus);
+}
 //
 //bool RSA::test(const BigInt& rp, const BigInt& rq) {
 //    return p == rp && q == rq;
@@ -132,10 +146,10 @@ void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
         mpz_set(p, tmp);
     }
     mpz_clear(tmp);
-    printf("p: "); mpz_out_str(stdout, 10, p);
-    cout << "\n[ p ]bit_size: " << mpz_sizeinbase(p, 2) << endl;
-    printf("q: "); mpz_out_str(stdout, 10, q);
-    cout << "\n[ q ]bit_size: " << mpz_sizeinbase(q, 2) << endl;
+    //printf("p: "); mpz_out_str(stdout, 10, p);
+    //cout << "\n[ p ]bit_size: " << mpz_sizeinbase(p, 2) << endl;
+    //printf("q: "); mpz_out_str(stdout, 10, q);
+    //cout << "\n[ q ]bit_size: " << mpz_sizeinbase(q, 2) << endl;
     _ASSERT(mpz_cmp(p, q) < 0);
 }
 
