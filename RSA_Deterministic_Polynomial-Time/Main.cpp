@@ -13,60 +13,6 @@
 
 using namespace std;
 
-//vector<int> small_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101 };
-//
-//BigInt randWithRange(int n_bit, BigInt range) { // within [0, range - 1]
-//    _ASSERT(range > 1);
-//    if (n_bit < 0) {
-//        n_bit = log(2, range - 1) + 1;
-//    }
-//    BigInt CPOW15 = pow(Integer(2), 15);
-//    BigInt s;
-//    do {
-//        s = Integer(0);
-//        while (n_bit >= 15) {
-//            s *= CPOW15;
-//            s += Integer(rand()) % CPOW15;
-//            n_bit -= 15;
-//        }
-//        if (n_bit) {
-//            s *= pow(2, n_bit);
-//            s += Integer(rand()) % pow(2, n_bit);
-//        }
-//    } while (s >= range);
-//    return s;
-//}
-//
-//BigInt int_pow_mod(BigInt v, BigInt p, BigInt mod) {   // v^p % m 找餘數
-//    BigInt res = Integer(1);
-//    //cout << "v: " << v << "p: " << p << "mod: " << mod;
-//    while (p > 0) {
-//        if (p % 2 == 1) {
-//            res *= v;
-//            res %= mod;
-//        }
-//        p /= 2;
-//        v = v * v % mod;
-//    }
-//    return res;
-//}
-//
-//bool is_prime(BigInt x) { // 根據費馬小定理判定質數 a^(x-1) = 1 mod x [if x is prime]
-//    if (x <= Integer(101)) {
-//        for (int p : small_primes)
-//            if (x == Integer(p)) return true;
-//        return false;
-//    }
-//    for (int i = 0; i < 20; ++i) {
-//        int n_bit = log(2, x);
-//        BigInt rnd = randWithRange(n_bit, x - 2) + 2;
-//        if (int_pow_mod(rnd, x - 1, x) != Integer(1)) {
-//            return false;
-//        }
-//    }
-//    return true;
-//}
-//
 //BigInt find_inverse(Ext a, Ext b) {
 //    Ext b0 = b, t, q;
 //    Ext x0 = Integer(0), x1 = Integer(1);
@@ -110,7 +56,9 @@ RSA::RSA(int bit_size, gmp_randstate_t rstate) {
     mpz_init(d);
 
     find_two_prime(bit_size, rstate);
-    //this->N = p * q;
+    mpz_mul(N, p, q);
+    //cout << "N: "; mpz_out_str(stdout, 10, N);
+    //cout << "\n[ N ]bit_size: " << mpz_sizeinbase(N, 2) << endl;
     //gen_ed();
 }
 
@@ -131,22 +79,6 @@ int main() {
 
     return 0;
 }
-
-//int main() {
-//    mpz_t a;
-//    gmp_randstate_t rstate;
-//
-//    mpz_init(a);
-//    gmp_randinit_default(rstate);
-//    gmp_randseed_ui(rstate, time(0));
-//
-//    mpz_urandomb(a, rstate, 100);
-//    printf("100 random bits gives: "); mpz_out_str(stdout, 10, a);
-//    cout << "\nA: " << mpz_sizeinbase(a, 2) << endl;
-//    putchar('\n');
-//
-//    return 0;
-//}
 
 //RSA::RSA(mpz_t p, mpz_t q) {
 //    _ASSERT(p != q);
