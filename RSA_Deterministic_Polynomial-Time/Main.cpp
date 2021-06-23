@@ -1,10 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <cmath>
-#include <random> 
-#include <string.h>
-
 //#include <time.h>
 //
 //#include "BigInt.h"
@@ -214,11 +207,16 @@
 //    }
 //    return 0;
 //}
-//
-#include "mpir.h"
-//#include <stdio.h>
-//#include <stdlib.h>
+
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cmath>
+#include <random> 
+#include <string.h>
 #include <assert.h>
+
+#include "mpir.h"
 
 void fact(int n) {
     int i;
@@ -236,18 +234,13 @@ void fact(int n) {
 
 int main(int argc, char* argv[]) {
     int n;
-
-
-    /*if (argc <= 1) {
+    if (argc <= 1) {
         printf("Usage: %s <number> \n", argv[0]);
         return 2;
-    }*/
-
-    //n = atoi(argv[1]);
-    n = 10;
-    //assert(n >= 0);
+    }
+    n = atoi(argv[1]);
+    assert(n >= 0);
     fact(n);
 
-
-    return 1;
+    return 0;
 }
