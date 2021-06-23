@@ -215,6 +215,7 @@
 #include <random> 
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 
 #include "mpir.h"
 
