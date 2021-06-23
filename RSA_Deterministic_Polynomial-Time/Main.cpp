@@ -13,22 +13,6 @@
 
 using namespace std;
 
-//BigInt find_inverse(Ext a, Ext b) {
-//    Ext b0 = b, t, q;
-//    Ext x0 = Integer(0), x1 = Integer(1);
-//    if (b == Integer(1)) return Integer(1);
-//    while (a > Integer(1)) {
-//        q = a / b;
-//        t = b, b = a % b, a = t;
-//        t = x0, x0 = x1 - q * x0, x1 = t;
-//    }
-//    if (x1 < Integer(0)) x1 += b0;
-//    x1 = x1 % b;
-//    if (x1 < 0)
-//        x1 = x1 + b;
-//    return x1.n;
-//}
-
 class RSA {
 private:
 public:
@@ -153,20 +137,21 @@ void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
     _ASSERT(mpz_cmp(p, q) < 0);
 }
 
-//bool RSA::find_Factorization(BigInt& rp, BigInt& rq) {
-//    BigInt start = Integer(2);
-//    BigInt end = sqrt(N);
-//    for (BigInt i = start; i <= end; i+=1) {
-//        if (is_prime(i)) {
-//            if (Integer(0) == (N % i)) {
-//                rp = i;
-//                rq = N / i;
-//                return true;
-//            }
-//        }
-//    }
-//    return false;
-//}
+/*
+bool RSA::find_Factorization(BigInt& rp, BigInt& rq) {
+    BigInt start = Integer(2);
+    BigInt end = sqrt(N);
+    for (BigInt i = start; i <= end; i+=1) {
+        if (is_prime(i)) {
+            if (Integer(0) == (N % i)) {
+                rp = i;
+                rq = N / i;
+                return true;
+            }
+        }
+    }
+    return false;
+}*/
 
 //int main() {
 //
