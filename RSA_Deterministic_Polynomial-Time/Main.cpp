@@ -1,5 +1,3 @@
-//#include <time.h>
-//
 //#include "BigInt.h"
 //
 //using namespace std;
@@ -183,30 +181,6 @@
 //    return out;
 //}
 //
-//int main() {
-//    clock_t start, end;
-//    double cpu_time_used;
-//
-//    int bit_size, samples = 1;
-//    for (bit_size = 8; bit_size < 1024; bit_size *= 2) {
-//        start = clock();
-//        for (int i = 0; i < samples; ++i)
-//        {
-//            RSA rsa = RSA(bit_size);
-//            //cout << "p:" << rsa.p << "q:" << rsa.q << "N:" << rsa.N << endl;
-//            //cout << "e:" << rsa.e << "d:" << rsa.d << endl;
-//
-//            BigInt rp, rq;
-//            _ASSERT(rsa.find_Factorization(rp, rq));
-//            //cout << "p:" << rsa.p << "q:" << rsa.q;
-//            _ASSERT(rsa.test(rp, rq));
-//        }
-//        end = clock();
-//        cpu_time_used = ((double)(end - start) / samples) / CLOCKS_PER_SEC;
-//        printf("Avg-Time = %f with bit-size %i \n", cpu_time_used, bit_size);
-//    }
-//    return 0;
-//}
 
 #include <iostream>
 #include <stdio.h>
@@ -219,29 +193,27 @@
 
 #include "mpir.h"
 
-void fact(int n) {
-    int i;
-    mpz_t p;
+int main() {
+    clock_t start, end;
+    double cpu_time_used;
 
-    mpz_init_set_ui(p, 1); /* p = 1 */
-    for (i = 1; i <= n; ++i) {
-        mpz_mul_ui(p, p, i); /* p = p * i */
+    int bit_size, samples = 1;
+    for (bit_size = 8; bit_size < 1024; bit_size *= 2) {
+        start = clock();
+        //for (int i = 0; i < samples; ++i)
+        //{
+        //    RSA rsa = RSA(bit_size);
+        //    //cout << "p:" << rsa.p << "q:" << rsa.q << "N:" << rsa.N << endl;
+        //    //cout << "e:" << rsa.e << "d:" << rsa.d << endl;
+
+        //    BigInt rp, rq;
+        //    _ASSERT(rsa.find_Factorization(rp, rq));
+        //    //cout << "p:" << rsa.p << "q:" << rsa.q;
+        //    _ASSERT(rsa.test(rp, rq));
+        //}
+        end = clock();
+        cpu_time_used = ((double)(end - start) / samples) / CLOCKS_PER_SEC;
+        printf("Avg-Time = %f with bit-size %i \n", cpu_time_used, bit_size);
     }
-    printf("%d!  =  ", n);
-    mpz_out_str(stdout, 10, p);
-    mpz_clear(p);
-
-}
-
-int main(int argc, char* argv[]) {
-    int n;
-    if (argc <= 1) {
-        printf("Usage: %s <number> \n", argv[0]);
-        return 2;
-    }
-    n = atoi(argv[1]);
-    assert(n >= 0);
-    fact(n);
-
     return 0;
 }
