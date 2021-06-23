@@ -158,7 +158,7 @@ int main() {
     double cpu_time_used;
 
     int bit_size, samples = 100;
-    for (bit_size = 8; bit_size < 256; bit_size += 8) {
+    for (bit_size = 8; bit_size <= 256; bit_size += 8) {
         start = clock();
         for (int i = 0; i < samples; ++i)
         {
