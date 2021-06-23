@@ -28,7 +28,7 @@ public:
     //bool test(const BigInt&, const BigInt&);
 
     void find_two_prime(int, gmp_randstate_t);
-    //bool find_Factorization(BigInt &, BigInt &);
+    bool find_Factorization(mpz_t, mpz_t);
 };
 
 RSA::RSA(int bit_size, gmp_randstate_t rstate) {
@@ -44,8 +44,8 @@ RSA::RSA(int bit_size, gmp_randstate_t rstate) {
     //cout << "N: "; mpz_out_str(stdout, 10, N);
     //cout << "\n[ N ]bit_size: " << mpz_sizeinbase(N, 2) << endl;
     gen_ed(rstate);
-    cout << "e: "; mpz_out_str(stdout, 10, e);
-    cout << "\nd: "; mpz_out_str(stdout, 10, d);
+    //cout << "\ne: "; mpz_out_str(stdout, 10, e);
+    //cout << "\nd: "; mpz_out_str(stdout, 10, d);
 }
 
 RSA::~RSA() {
@@ -127,65 +127,60 @@ void RSA::find_two_prime(int bit_size, gmp_randstate_t rstate) {
     _ASSERT(mpz_cmp(p, q) < 0);
 }
 
-/*
-bool RSA::find_Factorization(BigInt& rp, BigInt& rq) {
-    BigInt start = Integer(2);
-    BigInt end = sqrt(N);
-    for (BigInt i = start; i <= end; i+=1) {
-        if (is_prime(i)) {
-            if (Integer(0) == (N % i)) {
-                rp = i;
-                rq = N / i;
+
+bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
+    mpz_t i, end, r;
+    mpz_init(i);
+    mpz_init(end);
+    mpz_init(r);
+    mpz_set_si(i, 2);
+    mpz_sqrt(end, N);
+    while (mpz_cmp(i, end) <= 0) {
+        if (mpz_probab_prime_p(i, 25)) {
+            mpz_mod(r, N, i);
+            if (mpz_cmp_ui(r, 0) == 0) {
+                mpz_set(rp, i);
+                mpz_divexact(rq, N, i);
                 return true;
             }
         }
+        mpz_add_ui(i, i, 1);
     }
     return false;
-}*/
+}
 
 int main() {
     gmp_randstate_t rstate;
     gmp_randinit_default(rstate);
     gmp_randseed_ui(rstate, time(0));
 
-    RSA rsa(32, rstate);
+    clock_t start, end;
+    double cpu_time_used;
 
+    int bit_size, samples = 3;
+    for (bit_size = 8; bit_size < 64; bit_size += 8) {
+        start = clock();
+        for (int i = 0; i < samples; ++i)
+        {
+            RSA rsa = RSA(bit_size, rstate);
+            //cout << "p:" << rsa.p << "q:" << rsa.q << "N:" << rsa.N << endl;
+            //cout << "e:" << rsa.e << "d:" << rsa.d << endl;
+
+            mpz_t rp, rq;
+            mpz_init(rp);
+            mpz_init(rq);
+            _ASSERT(rsa.find_Factorization(rp, rq));
+            cout << "p:";
+            mpz_out_str(stdout, 10, rsa.p); putc('\n', stdout);
+            cout << "q:";
+            mpz_out_str(stdout, 10, rsa.q); putc('\n', stdout);
+        //    _ASSERT(rsa.test(rp, rq));
+            mpz_clear(rp);
+            mpz_clear(rq);
+        }
+        end = clock();
+        cpu_time_used = ((double)(end - start) / samples) / CLOCKS_PER_SEC;
+        printf("Avg-Time = %f with bit-size %i \n", cpu_time_used, bit_size);
+    }
     return 0;
 }
-
-//int main() {
-//
-//    gmp_randstate_t s;
-//    gmp_randinit_mt(s);
-//
-//    clock_t start, end;
-//    double cpu_time_used;
-//
-//    int bit_size, samples = 1;
-//    for (bit_size = 8; bit_size < 1024; bit_size *= 2) {
-//        start = clock();
-//
-//        //mpz_t n;
-//        //mpz_init(n);
-//        //mpz_set_ui(n, 2<<20);
-//        //mpz_out_str(stdout, 10, n);
-//        //cout << "A: " << mpz_sizeinbase(n, 2) << endl;
-//        //mpz_clear(n);
-//        // 
-//        //for (int i = 0; i < samples; ++i)
-//        //{
-//        //    RSA rsa = RSA(bit_size);
-//        //    //cout << "p:" << rsa.p << "q:" << rsa.q << "N:" << rsa.N << endl;
-//        //    //cout << "e:" << rsa.e << "d:" << rsa.d << endl;
-//
-//        //    BigInt rp, rq;
-//        //    _ASSERT(rsa.find_Factorization(rp, rq));
-//        //    //cout << "p:" << rsa.p << "q:" << rsa.q;
-//        //    _ASSERT(rsa.test(rp, rq));
-//        //}
-//        end = clock();
-//        cpu_time_used = ((double)(end - start) / samples) / CLOCKS_PER_SEC;
-//        printf("Avg-Time = %f with bit-size %i \n", cpu_time_used, bit_size);
-//    }
-//    return 0;
-//}
