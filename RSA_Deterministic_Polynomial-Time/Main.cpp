@@ -143,7 +143,6 @@ bool RSA::find_Factorization(mpz_t rp, mpz_t rq) {
         return factorizationCase1(ed, rp, rq);
         mpz_clear(ed);
     }
-    cout << "other" << endl;
     mpz_t i, end, r;
     mpz_init(i);
     mpz_init(end);
